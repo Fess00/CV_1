@@ -73,7 +73,7 @@ Mat ImpContarst(Mat& img, Mat& f1) {
     Mat tmpImg;
     addWeighted(img, 2.6, f1, -1.5, 0, tmpImg);
     f2 = tmpImg.clone();
-    imshow("8", f2);
+    imshow("Contrast", f2);
     return f2;
 }
 
@@ -81,40 +81,13 @@ Mat ImpContarst(Mat& img, Mat& f1) {
 Mat FinalFilter(Mat& img, Mat& f1, Mat& f2, Mat& m) {
     Mat f = img.clone();
 
-    uint8_t* pixelF = (uint8_t*)f.data;
-    Scalar_<uint8_t> bgrF;
-
-    uint8_t* pixel = (uint8_t*)img.data;
-    int cn = img.channels();
-    Scalar_<uint8_t> bgrPixel;
-
-    uint8_t* pixelM = (uint8_t*)m.data;
-    Scalar_<uint8_t> bgrM;
-
-    uint8_t* pixelF1 = (uint8_t*)f1.data;
-    Scalar_<uint8_t> bgrF1;
-
-    uint8_t* pixelF2 = (uint8_t*)f2.data;
-    Scalar_<uint8_t> bgrF2;
-
     for (int i = 0; i < img.rows; i++)
     {
         for (int j = 0; j < img.cols; j++)
         {
-            for (int l = 0; l < 3; l++) {
-                bgrF.val[l] = pixelF[i * f.cols * cn + j * cn + l];
-                bgrPixel.val[l] = pixel[i * img.cols * cn + j * cn + l];
-                bgrM.val[l] = pixelM[i * m.cols * cn + j * cn + l];
-                bgrF1.val[l] = pixelF1[i * f1.cols * cn + j * cn + l];
-                bgrF2.val[l] = pixelF2[i * f2.cols * cn + j * cn + l];
-            }
-
-            for (int k = 0; k < 3; k++)
-                bgrF.val[k] = bgrM.val[k] * bgrF2.val[k] + (1 - bgrM.val[k] * bgrF1.val[k]);
-
-            pixelF[i * f.cols * cn + j * cn + 0] = bgrF.val[0];
-            pixelF[i * f.cols * cn + j * cn + 1] = bgrF.val[1];
-            pixelF[i * f.cols * cn + j * cn + 2] = bgrF.val[2];
+            f.at<Vec3b>(i, j)[0] = m.at<Vec3b>(i, j)[0] * f2.at<Vec3b>(i, j)[0] + (1 - m.at<Vec3b>(i, j)[0]) * f1.at<Vec3b>(i, j)[0];
+            f.at<Vec3b>(i, j)[1] = m.at<Vec3b>(i, j)[1] * f2.at<Vec3b>(i, j)[1] + (1 - m.at<Vec3b>(i, j)[1]) * f1.at<Vec3b>(i, j)[1];
+            f.at<Vec3b>(i, j)[2] = m.at<Vec3b>(i, j)[2] * f2.at<Vec3b>(i, j)[2] + (1 - m.at<Vec3b>(i, j)[2]) * f1.at<Vec3b>(i, j)[2];
         }
     }
 
