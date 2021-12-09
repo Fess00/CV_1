@@ -39,6 +39,14 @@ Mat ShowBinaryEdges(Mat& img) {
     return edgedImg;
 }
 
+//The forth task
+//Mat DelEdges(Mat& img) {
+//    Mat fixEdgedImg;
+//
+//    imshow("Fixed Edges Image", fixEdgedImg);
+//    return fixEdgedImg;
+//}
+
 //The fifth task
 Mat MorphOp(Mat& img) {
     Mat dilImg;
@@ -68,11 +76,11 @@ Mat BilFilt(Mat& img) {
 }
 
 //The eighth task
-Mat ImpContarst(Mat& img, Mat& f1) {
+Mat ImpContarst(Mat& img) {
     Mat f2;
-    Mat tmpImg;
-    addWeighted(img, 2.6, f1, -1.5, 0, tmpImg);
-    f2 = tmpImg.clone();
+    f2 = img.clone();
+    Mat kernel = (Mat_<char>(3,3) << -1, -1, -1, -1, 9, -1, -1, -1, -1);
+    filter2D(f2, f2, -1, kernel);
     imshow("Contrast", f2);
     return f2;
 }
@@ -104,10 +112,11 @@ int main()
     Mat frame = imread(path);
     Mat frame1 = DetAndDraw(frame, faceCascade, scale);
     Mat frame2 = ShowBinaryEdges(frame1);
-    Mat frame3 = MorphOp(frame2);
-    Mat M = GaussFilt(frame3, frame1);
+    //Mat frame3 = DelEdges(frame2);
+    Mat frame4 = MorphOp(frame2);
+    Mat M = GaussFilt(frame4, frame1);
     Mat F1 = BilFilt(frame1);
-    Mat F2 = ImpContarst(frame1, F1);
+    Mat F2 = ImpContarst(frame1);
     Mat fin = FinalFilter(frame1, F1, F2, M);
 
     waitKey(0);
