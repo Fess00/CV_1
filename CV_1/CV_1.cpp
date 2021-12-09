@@ -79,7 +79,7 @@ Mat BilFilt(Mat& img) {
 Mat ImpContarst(Mat& img) {
     Mat f2;
     f2 = img.clone();
-    Mat kernel = (Mat_<char>(3,3) << -1, -1, -1, -1, 9, -1, -1, -1, -1);
+    Mat kernel = (Mat_<int>(3,3) << -1, -1, -1, -1, 9, -1, -1, -1, -1);
     filter2D(f2, f2, -1, kernel);
     imshow("Contrast", f2);
     return f2;
